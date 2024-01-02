@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useZxing } from "react-zxing";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const BarcodeScanner = () => {
   const [result, setResult] = useState("");
@@ -10,7 +13,7 @@ export const BarcodeScanner = () => {
   const { ref } = useZxing({
     async onDecodeResult(result) {
       setResult(result.getText());
-      await fetch(base_url + '?barcode=' + result.getText() + '&key=' + import.meta.env.API_KEY)
+      await fetch(base_url + '?barcode=' + result.getText() + '&key=' + process.env.API_KEY)
         .then(result => console.log(result))
         .catch(err => console.log(err));
     },
