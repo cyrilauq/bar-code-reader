@@ -12,20 +12,14 @@ export const BarcodeScanner = () => {
   });
 
   useEffect(() => {
+    const isMobileDevice = () => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
     const requestCameraAccess = async () => {
-        try {
-            console.log(navigator);
-            
-            console.log(navigator.mediaDevices);
-            
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: {
-                    facingMode: 'environment'
-                }
-            });
+        try {            
             if (navigator.mediaDevices) {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: true, 
+                    video: isMobileDevice() ? { facingMode: 'environment' } : true
                 });
                 if (ref.current) {
                     ref.current.srcObject = stream;
