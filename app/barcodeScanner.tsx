@@ -19,7 +19,9 @@ export const BarcodeScanner = () => {
             console.log(navigator.mediaDevices);
             
             const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: true, 
+                video: {
+                    facingMode: 'environment'
+                }
             });
             if (navigator.mediaDevices) {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
