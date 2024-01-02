@@ -32,34 +32,29 @@ export const BarcodeScanner = () => {
                     ref.current.setAttribute("playsinline", "true");
                 }
             } else {
-                navigator.getUserMedia(
-                    { audio: true, video: { width: 1280, height: 720 } },
-                    (stream: MediaProvider | null) => {
-                        const video = document.querySelector("video");
-                        if(ref.current) {
-                            ref.current.srcObject = stream;
-                        }
-                    },
-                    (err: { name: any; }) => {
-                        console.error(`The following error occurred: ${err.name}`);
-                    },
-                );
+                // navigator.getUserMedia(
+                //     { audio: true, video: { width: 1280, height: 720 } },
+                //     (stream: MediaProvider | null) => {
+                //         const video = document.querySelector("video");
+                //         if(ref.current) {
+                //             ref.current.srcObject = stream;
+                //         }
+                //     },
+                //     (err: { name: any; }) => {
+                //         console.error(`The following error occurred: ${err.name}`);
+                //     },
+                // );
                 console.error("getUserMedia is not supported");
             }
         } catch (error) {
-            console.error("Error accessing the camera:", error.message);
+            console.error("Error accessing the camera:", (error as { message: String }).message);
         }
     };
 
     requestCameraAccess();
 
     // Cleanup when component unmounts
-    return () => {
-      if (ref.current) {
-        const tracks = ref.current.srcObject?.getTracks();
-        tracks?.forEach((track) => track.stop());
-      }
-    };
+    return () => {};
   }, [ref]);
 
   return (
