@@ -5,9 +5,14 @@ import { useZxing } from "react-zxing";
 
 export const BarcodeScanner = () => {
   const [result, setResult] = useState("");
+  const [product, setProduct] = useState("")
+  const base_url = 'https://api.barcodelookup.com/v3/products'
   const { ref } = useZxing({
-    onDecodeResult(result) {
+    async onDecodeResult(result) {
       setResult(result.getText());
+      await fetch(base_url + '?barcode=' + result.getText() + '&key=' + import.meta.env.API_KEY)
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
     },
   });
 
@@ -28,18 +33,6 @@ export const BarcodeScanner = () => {
                     ref.current.setAttribute("playsinline", "true");
                 }
             } else {
-                // navigator.getUserMedia(
-                //     { audio: true, video: { width: 1280, height: 720 } },
-                //     (stream: MediaProvider | null) => {
-                //         const video = document.querySelector("video");
-                //         if(ref.current) {
-                //             ref.current.srcObject = stream;
-                //         }
-                //     },
-                //     (err: { name: any; }) => {
-                //         console.error(`The following error occurred: ${err.name}`);
-                //     },
-                // );
                 console.error("getUserMedia is not supported");
             }
         } catch (error) {
