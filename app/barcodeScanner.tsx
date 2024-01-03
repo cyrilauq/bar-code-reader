@@ -5,7 +5,7 @@ import { useZxing } from "react-zxing";
 
 export const BarcodeScanner = () => {
     const [result, setResult] = useState("");
-    const [product, setProduct] = useState({});
+    const [product, setProduct] = useState({ title: String });
     const base_url = 'https://api.barcodelookup.com/v3/products'
     const { ref } = useZxing({
         async onDecodeResult(result) {
