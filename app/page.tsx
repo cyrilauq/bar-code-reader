@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { BarcodeScanner } from './barcodeScanner'
 
 export default function Home() {
