@@ -2,22 +2,29 @@
 
 import { useState, useEffect } from "react";
 import { useZxing } from "react-zxing";
+import axios from "axios";
 
 export const BarcodeScanner = () => {
     const [result, setResult] = useState("");
     const [product, setProduct] = useState({ title: "" });
+    const [hasProduct, setHasProduct] = useState(false);
     const base_url = 'https://api.barcodelookup.com/v3/products'
     const { ref } = useZxing({
         async onDecodeResult(result) {
-            let found = undefined
             setResult(result.getText());
-            await fetch('https://bar-code-reader-api.onrender.com/product/' + result.getText())
-                .then(result => result.json())
-                .then(result => found = result)
-                .catch(err => console.log(err));
-            if(found) {
-                setProduct(found)
-            }  
+            try {
+                const found = (await axios.get('https://bar-code-reader-api.onrender.com/product/' + result.getText())).data as { title: "" };
+                setProduct(found);
+                setHasProduct(true);
+            } catch(error) {
+                setHasProduct(false);
+                const err = (error as any).response.data.error;
+                if(err.message) {
+                    console.log(err.message);
+                } else {
+                    console.log(err);
+                }
+            }
         },
     });
 
@@ -26,17 +33,13 @@ export const BarcodeScanner = () => {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         };
         const requestCameraAccess = async () => {
-            try {            
-                console.log(isMobileDevice());
+            try {
                 if (navigator.mediaDevices) {
                     const stream = await navigator.mediaDevices.getUserMedia({ 
                         video: isMobileDevice() ? { facingMode: 'environment' } : true
                     });
                     if (ref.current) {
                         ref.current.srcObject = stream;
-                        ref.current.setAttribute("autoplay", "true");
-                        ref.current.setAttribute("muted", "true");
-                        ref.current.setAttribute("playsinline", "true");
                     }
                 } else {
                     console.error("getUserMedia is not supported");
@@ -59,7 +62,7 @@ export const BarcodeScanner = () => {
                 <span>Last result:</span>
                 <span>{result}</span>
             </p>
-            {product ? <p>{product.title}</p> : undefined}
+            {hasProduct ? <p>{product.title}</p> : <p>No product found</p>}
         </>
     );
 };
