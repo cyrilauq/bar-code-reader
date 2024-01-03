@@ -11,6 +11,7 @@ app.get("/product/:barCode", async (req, res, next) => {
     try {
         const result = await axios.get('https://api.upcitemdb.com/prod/trial/lookup?upc=' + req.params.barCode);
         const data = result.data;
+        console.log(data);
         if (data.items.length === 0) {
             res.status(404).json({ error: "No product found" });
         }
