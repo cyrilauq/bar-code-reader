@@ -5,7 +5,7 @@ import { useZxing } from "react-zxing";
 
 export const BarcodeScanner = () => {
     const [result, setResult] = useState("");
-    const [product, setProduct] = useState({ title: String });
+    const [product, setProduct] = useState({ title: "" });
     const base_url = 'https://api.barcodelookup.com/v3/products'
     const { ref } = useZxing({
         async onDecodeResult(result) {
@@ -52,10 +52,6 @@ export const BarcodeScanner = () => {
         return () => {};
     }, [ref]);
 
-    function getProduct() {
-        return product ? <p>{product.title}</p> : undefined;
-    }
-
     return (
         <>
             <video ref={ref} autoPlay muted playsInline />
@@ -63,7 +59,7 @@ export const BarcodeScanner = () => {
                 <span>Last result:</span>
                 <span>{result}</span>
             </p>
-            {getProduct()}
+            {product ? <p>{product.title}</p> : undefined}
         </>
     );
 };
