@@ -6,12 +6,11 @@ import { useZxing } from "react-zxing";
 export const BarcodeScanner = () => {
   const [result, setResult] = useState("");
   const [product, setProduct] = useState("")
-  console.log(process.env.NEXT_PUBLIC_API_KEY);
   const base_url = 'https://api.barcodelookup.com/v3/products'
   const { ref } = useZxing({
     async onDecodeResult(result) {
       setResult(result.getText());
-      await fetch(base_url + '?barcode=' + result.getText() + '&key=' + process.env.NEXT_PUBLIC_API_KEY)
+      await fetch(base_url + '?barcode=' + result.getText() + '&formatted=y&key=' + process.env.NEXT_PUBLIC_API_KEY)
         .then(result => console.log(result))
         .catch(err => console.log(err));
     },
